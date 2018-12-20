@@ -304,7 +304,12 @@ class diff_tester{
     $url = $this->urls[$id];
     $device = $this->responsive[$id_device];
 
-    $return["old"] = "screens/".$date."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
+    $most_recent = $this->get_most_recent_screen($date, $url, $device);
+    if ($most_recent == false) {
+      $most_recent = "screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
+    }
+
+    $return["old"] = $most_recent;
     $return["new"] = "screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     $return["compare"] = "diffs/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     return $return;
