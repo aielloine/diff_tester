@@ -14,5 +14,5 @@ Create a data base, and configure your application in the config.cnf file.
 - php-imagick
 
 ## Some screens :
-![Screen of diff_tester](1.png?raw=true "list of difs")
-![Screen of diff_tester](2.png?raw=true "show difs")
+![Screen of diff_tester](AppPictures/1.png?raw=true "list of difs")
+![Screen of diff_tester](AppPictures/2.png?raw=true "show difs")
