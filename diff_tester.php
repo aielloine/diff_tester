@@ -314,7 +314,16 @@ class diff_tester{
     $return["compare"] = "diffs/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     return $return;
   }
-
+  // test headers of a url
+  public function url_work(string $url){
+    $file_headers = @get_headers($url);
+    if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
+        return array(false, $file_headers[0]);
+    }
+    else {
+        return array(true, $file_headers[0]);
+    }
+  }
 
 
 
@@ -441,6 +450,42 @@ class diff_tester{
     echo "------------------------------";
     echo "<br />";
     echo "## Actualisation successful ##";
+    echo "<br />";
+    echo "------------------------------";
+  }
+
+  // see if they are new links
+  public function test_urls()
+  {
+    echo "--------------";
+    echo "<br />";
+    echo "## CONSOLE ##";
+    echo "<br />";
+    echo "## List of don't worked urls ##";
+    echo "<br />";
+    echo "--------------";
+    echo "<br /><table>";
+    $urls = $this->get_urls_BDD();
+    foreach ($urls as $id => $url) {
+      $work = $this->url_work($url);
+      if (!$work[0]) {
+        echo "<tr><td style='padding:20px'>$url</td><td style='padding:20px'>$work[1]";
+        echo "<script>
+        setTimeout(function() {
+        var scrollBottom = $(window).scrollTop() + $(window).height();
+        $(window).scrollTop(scrollBottom);}
+        ,80);
+        </script></td></tr>";
+        // affiche les urls que l'on s'aprète à ajouter en direct
+        ob_flush();
+        flush();
+      }
+    }
+    echo "</table><br />";
+    echo "<br />";
+    echo "------------------------------";
+    echo "<br />";
+    echo "## Verification successful ##";
     echo "<br />";
     echo "------------------------------";
   }
