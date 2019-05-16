@@ -21,7 +21,10 @@ Go on the website and search all the links that the user can find.
 Remove all the url accents in the database.
 
 #### Url tester ####
-Test all the urls of the database. Return all the 404 pages and the devlinks.
+Test all the urls of the database. Return all the 404 pages and the developer links.
+
+#### Menu compare ####
+Compare the menu if they are differences between 2 links. Test all the links if they work.
 
 ## Some dependies:
 - [php phantomjs](http://jonnnnyw.github.io/php-phantomjs/)

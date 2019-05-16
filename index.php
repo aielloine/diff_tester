@@ -13,6 +13,7 @@
             <a class="fk_btn fk_mt_3 colored_btn"  onclick="return confirm('Toutes les urls dans la BDD seront perdues!')" title="ATTENTION : peut prendre des heures" href="refresh_BDD.php">Rafraichir la BDD</a>
             <a class="fk_btn fk_mt_3 colored_btn" title="ATTENTION : peut prendre des heures" href="normalize_BDD.php">Enlever les accents de la BDD</a>
             <a class="fk_btn fk_mt_3 colored_btn" title="ATTENTION : peut prendre des heures" href="test_urls.php">Tester les urls</a>
+            <a class="fk_btn fk_mt_3 colored_btn" href="menu_compare.php">Comparer les menus de 2 sites</a>
           </form>
         </div>
       </div>

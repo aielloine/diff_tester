@@ -467,18 +467,35 @@ class diff_tester{
     echo "<br /><table>";
     $urls = $this->get_urls_BDD();
     foreach ($urls as $id => $url) {
-      $work = $this->url_work($url);
-      if (!$work[0]) {
-        echo "<tr><td style='padding:20px'>$url</td><td style='padding:20px'>$work[1]";
-        echo "<script>
-        setTimeout(function() {
-        var scrollBottom = $(window).scrollTop() + $(window).height();
-        $(window).scrollTop(scrollBottom);}
-        ,80);
-        </script></td></tr>";
-        // affiche les urls que l'on s'aprète à ajouter en direct
-        ob_flush();
-        flush();
+
+      $parsedUrl = parse_url($url);
+      $host = explode('.', $parsedUrl['host']);
+      if (!in_array(SUB_DOMAIN, $host)) {
+          echo "<tr><td style='padding:20px'>$url</td><td style='padding:20px'>dont in de good subdomain ".SUB_DOMAIN;
+          echo "<script>
+          setTimeout(function() {
+          var scrollBottom = $(window).scrollTop() + $(window).height();
+          $(window).scrollTop(scrollBottom);}
+          ,80);
+          </script></td></tr>";
+          // affiche les urls que l'on s'aprète à ajouter en direct
+          ob_flush();
+          flush();
+
+      } else{
+        $work = $this->url_work($url);
+        if (!$work[0]) {
+          echo "<tr><td style='padding:20px'>$url</td><td style='padding:20px'>$work[1]";
+          echo "<script>
+          setTimeout(function() {
+          var scrollBottom = $(window).scrollTop() + $(window).height();
+          $(window).scrollTop(scrollBottom);}
+          ,80);
+          </script></td></tr>";
+          // affiche les urls que l'on s'aprète à ajouter en direct
+          ob_flush();
+          flush();
+        }
       }
     }
     echo "</table><br />";
@@ -488,6 +505,107 @@ class diff_tester{
     echo "## Verification successful ##";
     echo "<br />";
     echo "------------------------------";
+  }
+
+  public function menu_compare(){
+    // get all the links menu of the actuel website
+    $menu = $this->get_menu_links(HOME, MENU_div_a, MENU_div_b);
+    // get all the links menu of the new website
+    $menu_new = $this->get_menu_links(HOME_new, MENU_new_div_a, MENU_new_div_b);
+    // the sup var is a suplement if a url dont exist so dont shift all the array
+    $sup = 0;
+    $miss_old = 0;
+    $miss_new = 0;
+    $padding = "20px";
+    ?>
+    <table>
+      <tr style="border: 2px solid black">
+        <td style="padding-top:<?= $padding ?>; font-weight:bold">Liens de <?= HOME ?></td>
+        <td style="padding-top:<?= $padding ?>;"></td>
+        <td style="padding-top:<?= $padding ?>; font-weight:bold">Liens de <?= HOME_new ?></td>
+      </tr>
+      <?php
+      foreach ($menu as $key => $link) {
+        $act = $key+$sup;
+        if (isset($menu_new[$act]) && $link != $menu_new[$act]) {
+
+          $is_in_new_menu = 0;
+          // see if the link is in the new menu
+          for ($i=1; $i < 5; $i++) {
+            if (isset($menu_new[$act+$i]) && $link == $menu_new[$act+$i]) {
+              $is_in_new_menu = $i;
+            }
+          }
+          // if the link is in the other menu, reset the good index and "set" links from
+          // the new menu in menu
+          if ($is_in_new_menu > 0) {
+            for ($i=0; $i <$is_in_new_menu ; $i++) {
+              $act = $key+$sup;?>
+              <tr>
+                <td style="padding-top:<?= $padding ?>;"></td>
+                <td style="padding:<?= $padding ?> <?= $padding ?> 0 <?= $padding ?>; font-weight:bold"> <= </td>
+                <td style="padding-top:<?= $padding ?>;"><?= $menu_new[$act] ?> </td>
+              </tr>
+
+              <?php $sup ++;
+              $miss_old ++;
+            }
+          }
+
+
+
+          $is_in_menu = 0;
+          // see if the link is in the old menu
+          for ($i=1; $i < 10; $i++) {
+            if (isset($menu[$key+$i]) && $menu_new[$act] == $menu[$key+$i]) {
+              $is_in_menu = $i;
+            }
+          }
+          // if the link is in the other menu, reset the good index and "set" links from
+          // the old menu in menu
+          if ($is_in_menu > 0) {
+            for ($i=0; $i < $is_in_menu ; $i++) {
+              $act = $key+$sup;?>
+              <tr>
+                <td style="padding-top:<?= $padding ?>;"><?= $menu[$act] ?></td>
+                <td style="padding:<?= $padding ?> 20px 0 <?= $padding ?>; font-weight:bold"> => </td>
+                <td style="padding-top:<?= $padding ?>;"> </td>
+              </tr>
+
+              <?php $sup --;
+              $miss_new ++;
+            }
+          }
+        }
+      } ?>
+      <tr>
+        <td style="padding-top:<?= $padding ?>; font-weight:bold">Il manque <?= $miss_old ?> liens dans <?= HOME ?></td>
+        <td style="padding-top:<?= $padding ?>;"></td>
+        <td style="padding-top:<?= $padding ?>; font-weight:bold">Il manque <?= $miss_new ?> liens dans <?= HOME_new ?></td>
+      </tr>
+    </table>
+
+
+    <?php
+
+  }
+
+  // return all the links of the menu of the page
+  // menu a is the begin of the menu div
+  // menu b is the end of the menu div
+  public function get_menu_links($url, $menu_a, $menu_b){
+    $url = $this->remove_accents(urldecode($url));
+
+
+    $content = file_get_contents($url);
+    $first_step = explode($menu_a, $content );
+    $second_step = explode($menu_b, $first_step[1] );
+
+    // get all the links from the menu
+    $motif='#<a href="(.*?)"(.*?)>#';
+
+    preg_match_all($motif,$second_step[0],$out,PREG_PATTERN_ORDER);
+    return $out[1];
   }
 
 }

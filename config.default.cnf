@@ -9,7 +9,7 @@ DEFINE('DB_DRIVER' , 'mysql');
 DEFINE('DB_HOST' , 'localhost'); //host
 DEFINE('DB_SERVER_PORT' , '3306'); //port
 DEFINE('DB_USER' , 'root'); //user
-DEFINE('DB_PASSWORD' , 'tovenaar'); //password
+DEFINE('DB_PASSWORD' , ''); //password
 DEFINE('DB_NAME','diff_tester'); // data base name
 DEFINE('DB_CHARSET','UTF8');
 
@@ -28,7 +28,7 @@ DEFINE('SUB_DOMAIN', 'moufle3'); //sub domain for test if they are dev links
 DEFINE('HOME', 'https://moufle3.univ-montp3.fr'); //first url that going to test
 DEFINE('MENU_div_a', '<header id="page-header"'); //first url that going to test
 DEFINE('MENU_div_b', '</header>'); //first url that going to test
-DEFINE('HOME_new', 'https://webpprod.univ-montp3.fr'); //first url of the new website that going to test
+DEFINE('HOME_new', 'https://pprod.univ-montp3.fr'); //first url of the new website that going to test
 DEFINE('MENU_new_div_a', '<header id="page-header"'); //first url that going to test
 DEFINE('MENU_new_div_b', '</header>'); //first url that going to test
 DEFINE('MAX_URLS', -1); //first url that going to test (-1 for unlimited)
