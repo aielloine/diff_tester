@@ -155,10 +155,9 @@ class diff_tester{
   // take snaps of each url and each device in the folder of the date of today
   public function get_snaps(){
     // create the screens directory if not exist
-    if (!is_dir("screens")) {
+    if (!is_dir("screens") && !file_exists("screens") ) {
       mkdir("screens", 0777, true);
     }
-
     // instancie le client de phantomJs
     $client = Client::getInstance();
     $client->isLazy();
@@ -171,15 +170,16 @@ class diff_tester{
         $request = $client->getMessageFactory()->createCaptureRequest($url, 'GET');
         $request->setTimeout(5000);
         $request->setOutputFile('./screens/'.$this->now.'/'.$device[0].'x'. $device[1].'/'.$url.'.jpg');
+        // $request->setOutputFile('/media/aielloine/Données/screens/'.$this->now.'/'.$device[0].'x'. $device[1].'/'.$url.'.jpg');
         $request->setViewportSize($device[0], $device[1]);
         $response = $client->getMessageFactory()->createResponse();
         // if dont diffs, delete screen, if capture is new, do nothing
         $most_recent_screen = $this->get_most_recent_screen($this->now, $url, $device);
-
+exit;
         $client->send($request, $response);
-
         // if font have diffs, delete picture
         if ($most_recent_screen != false) {
+          // $src_img1 = '/media/aielloine/Données/screens/'.$this->now.'/'.$device[0].'x'. $device[1].'/'.$url.'.jpg';
           $src_img1 = __DIR__.'/screens/'.$this->now.'/'.$device[0].'x'. $device[1].'/'.$url.'.jpg';
           $src_img2 = __DIR__."/".$most_recent_screen;
           $result = $this->get_pics_diff($src_img1, $src_img2);
@@ -212,9 +212,11 @@ class diff_tester{
     $dateB = strtotime($dateB);
     // get all the dirs exists
     $dirs = array();
+    // $scan_dir = scandir("/media/aielloine/Données/screens");
     $scan_dir = scandir("screens");
     foreach ($scan_dir as $key => $value) {
       if (!in_array($value,array(".","..")) && is_dir("screens/". $value)) {
+      // if (!in_array($value,array(".","..")) && is_dir("/media/aielloine/Données/screens/". $value)) {
         $dirs[] = strtotime($value);
       }
     }
@@ -234,6 +236,7 @@ class diff_tester{
   public function get_most_recent_screen($date, $url, $device)
   {
     $path_screens = "/".$device[0].'x'. $device[1]."/".$url.'.jpg';
+    // $src_img1 = "/media/aielloine/Données/screens/".$date. $path_screens;
     $src_img1 = "screens/".$date. $path_screens;
     while(!file_exists($src_img1)){
       $date = $this->get_most_recent_date($date);
@@ -242,6 +245,7 @@ class diff_tester{
         exit;
       }else {
         $src_img1 = "screens/".$date. $path_screens;
+        // $src_img1 = "/media/aielloine/Données/screens/".$date. $path_screens;
       }
     }
     return $src_img1;
@@ -250,18 +254,21 @@ class diff_tester{
   //return the purcentage in float of the changes of the page and create a diff file
   public function get_diff(Array $device, String $url, String $date){
     // get the screenshots of today if we dont have
+    // if (!is_dir("/media/aielloine/Données/screens/".$this->now)) {
     if (!is_dir("screens/".$this->now)) {
       $this->get_snaps();
     }
     $most_recent = $this->get_most_recent_screen($date, $url, $device);
     $src_img1 = __DIR__."/".$most_recent;
     if ($most_recent == false) {
+      // $src_img1 = "/media/aielloine/Données/screens/".$date."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
       $src_img1 = __DIR__."/screens/".$date."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     }
 
     $most_recent = $this->get_most_recent_screen($this->now, $url, $device);
     $src_img2 = __DIR__."/".$most_recent;
     if ($most_recent == false) {
+      // $src_img2 = "/media/aielloine/Données/screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
       $src_img2 = __DIR__."/screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     }
     $result = $this->get_pics_diff($src_img1, $src_img2);
@@ -271,6 +278,7 @@ class diff_tester{
     $name = array_pop($parsed_url);
     $path = implode("/", $parsed_url);
 
+    // $path_difs = "/media/aielloine/Données/diffs/".$this->now."/".$device[0].'x'. $device[1].'/'.$path;
     $path_difs = "diffs/".$this->now."/".$device[0].'x'. $device[1].'/'.$path;
     $result[0]->setImageFormat("jpg");
     if ($result[1] > 0) {
@@ -306,11 +314,14 @@ class diff_tester{
 
     $most_recent = $this->get_most_recent_screen($date, $url, $device);
     if ($most_recent == false) {
+      // $most_recent = "/media/aielloine/Données/screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
       $most_recent = "screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     }
 
     $return["old"] = $most_recent;
+    // $return["new"] = "/media/aielloine/Données/screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     $return["new"] = "screens/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
+    // $return["compare"] = "/media/aielloine/Données/diffs/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     $return["compare"] = "diffs/".$this->now."/".$device[0].'x'. $device[1]."/".$url.'.jpg';
     return $return;
   }

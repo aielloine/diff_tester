@@ -21,11 +21,11 @@ DEFINE('DB_CHARSET','UTF8');
 DEFINE('DEVICES',
   array(
     array(1680, 1050),
-    array(480, 320),
+    // array(480, 320),
 )); //devices to test
-DEFINE('DOMAIN', 'moufle3.univ-montp3.fr'); //domain of your website
-DEFINE('SUB_DOMAIN', 'moufle3'); //sub domain for test if they are dev links
-DEFINE('HOME', 'https://moufle3.univ-montp3.fr'); //first url that going to test
+DEFINE('DOMAIN', 'webpprod.univ-montp3.fr'); //domain of your website
+DEFINE('SUB_DOMAIN', 'webpprod'); //sub domain for test if they are dev links
+DEFINE('HOME', 'https://webpprod.univ-montp3.fr'); //first url that going to test
 DEFINE('MENU_div_a', '<header id="page-header"'); //first url that going to test
 DEFINE('MENU_div_b', '</header>'); //first url that going to test
 DEFINE('HOME_new', 'https://webpprod.univ-montp3.fr'); //first url of the new website that going to test
@@ -37,4 +37,18 @@ DEFINE('BAN_WORDS', array(
   '.pdf',
   'facebook.com',
   'twitter.com',
+  'upv.univ-montp3.fr',
+  '@univ-montp3.fr',
+  'cales.formations.univ-montp3.fr',
+  'mister-wong.de',
+  'digg.com',
+  'del.icio.us',
+  'webtv.univ-montp3.fr',
+  'yahoo.com',
+  'yigg.de',
+  'univ-montp3.fr/fr/file/',
+  'univ-montp3.fr/file/',
+  'forward?path=oaspace',
+  'etu.univ-montp3.fr',
+  'webtv.univ-montp3.fr'
 )); // array with all the ban words in urls
